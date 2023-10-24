@@ -47,10 +47,9 @@ namespace DoNotModify
 					isApplied = true;
 				}
 			}
-			if (collision.tag == "Mine")
+			if (collision.tag == "Mine" || collision.tag == "Bullet")
 			{
-				Mine mine = collision.attachedRigidbody.GetComponent<Mine>();
-				Destroy(mine.gameObject);
+				Destroy(collision.attachedRigidbody.gameObject);
 			}
 			if (isApplied)
 			{

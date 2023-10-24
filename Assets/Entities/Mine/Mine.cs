@@ -9,8 +9,12 @@ namespace DoNotModify
 		public MineView(Mine mine) { _mine = mine; }
 		Mine _mine;
 
+		// Constants
+		public float ActivationTime { get { return _mine.ActivationTime; } }
 		public float ExplosionRadius { get { return _mine.ExplosionRadius; } }
 		public float BulletHitRadius { get { return _mine.BulletHitRadius; } }
+
+		// Variables
 		public Vector2 Position { get { return _mine.Position; } }
 		public bool IsActive { get { return _mine.IsActive; } }
 	}
@@ -18,7 +22,8 @@ namespace DoNotModify
 	public class Mine : MonoBehaviour
 	{
 		public MineView view;
-		public float ExplosionRadius { get { return _explosionCollider.radius * Mathf.Abs(_explosionCollider.transform.lossyScale.x); } }
+        public float ActivationTime { get { return _activationTime; } }
+        public float ExplosionRadius { get { return _explosionCollider.radius * Mathf.Abs(_explosionCollider.transform.lossyScale.x); } }
 		public float BulletHitRadius { get { return _bulletCollider.radius * Mathf.Abs(_bulletCollider.transform.lossyScale.x); } }
 		public Vector2 Position { get { return (Vector2)(transform.position); } }
 		public bool IsActive { get { return _isActive; } }

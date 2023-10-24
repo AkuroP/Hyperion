@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 namespace DoNotModify
 {
@@ -8,93 +9,126 @@ namespace DoNotModify
 	{
 		public SpaceShipView(SpaceShip spaceship) { _spaceship = spaceship; }
 
-		public int Owner { get { return _spaceship.Owner; } }
-		public float Thrust { get { return _spaceship.Thrust; } }
-		public Vector2 Velocity { get { return _spaceship.Velocity; } }
-		public float SpeedMax { get { return _spaceship.SpeedMax; } }
-		public Vector2 Position { get { return (Vector2)(_spaceship.Position); } }
-		public float Orientation { get { return _spaceship.Orientation; } }
-		public Vector2 LookAt { get { return _spaceship.LookAt; } }
-		public float Radius { get { return _spaceship.Radius; } }
-		public float HitCountdown { get { return _spaceship.HitCountdown; } }
-		public float Energy { get { return _spaceship.Energy; } }
-		public float MineEnergyCost { get { return _spaceship.MineEnergyCost; } }
-		public float ShootEnergyCost { get { return _spaceship.ShootEnergyCost; } }
-		public float ShockwaveEnergyCost { get { return _spaceship.ShockwaveEnergyCost; } }
-		public int HitCount { get { return _spaceship.HitCount; } }
-		public int Score { get { return _spaceship.Score; } }
+        // Constants
+        public float Radius { get { return _spaceship.Radius; } }
+        public float SpeedMax { get { return _spaceship.SpeedMax; } }
+        public float RotationSpeed { get { return _spaceship.RotationSpeed; } }
+        public float EnergyPerSecond { get { return _spaceship.EnergyPerSecond; } }
+        public float ThrustConsumption { get { return _spaceship.ThrustConsumption; } }
+        public float MineEnergyCost { get { return _spaceship.MineEnergyCost; } }
+        public float ShootEnergyCost { get { return _spaceship.ShootEnergyCost; } }
+        public float ShockwaveEnergyCost { get { return _spaceship.ShockwaveEnergyCost; } }
+        public float HitPenaltyDuration { get { return _spaceship.HitPenaltyDuration; } }
+        public float HitPenaltySpeedFactor { get { return _spaceship.HitPenaltySpeedFactor; } }
+        public float StunPenaltyDuration { get { return _spaceship.StunPenaltyDuration; } }
 
-		private SpaceShip _spaceship;
+        // Variables
+        public int Owner { get { return _spaceship.Owner; } }
+        public float Thrust { get { return _spaceship.Thrust; } }
+        public Vector2 Velocity { get { return _spaceship.Velocity; } }
+        public Vector2 Position { get { return _spaceship.Position; } }
+        public float Orientation { get { return _spaceship.Orientation; } }
+        public Vector2 LookAt { get { return _spaceship.LookAt; } }
+        public float Energy { get { return _spaceship.Energy; } }
+        public int HitCount { get { return _spaceship.HitCount; } }
+        public float HitPenaltyCountdown { get { return _spaceship.HitPenaltyCountdown; } }
+        public float StunPenaltyCountdown { get { return _spaceship.StunPenaltyCountdown; } }
+        public int Score { get { return _spaceship.Score; } }
+        public int HitScore { get { return _spaceship.HitScore; } }
+        public int WaypointScore { get { return _spaceship.WaypointScore; } }
+        public bool HasShot { get { return _spaceship.HasShot; } }
+        public bool HasFiredShockwave { get { return _spaceship.HasFiredShockwave; } }
+        public bool HasDroppedMine { get { return _spaceship.HasDroppedMine; } }
+
+        private SpaceShip _spaceship;
 	}
 
 	public class SpaceShip : MonoBehaviour
 	{
 		public SpaceShipView view;
 
-		public int Owner { get { return _owner; } }
+        // Constant views
+        public float Radius { get { return _collider.radius * Mathf.Abs(_collider.transform.lossyScale.x); } }
+		public float SpeedMax { get { return _speedMax; } }
+        public float RotationSpeed { get { return _rotationSpeed; } }
+        public float EnergyPerSecond { get { return _energyPerSecond; } }
+        public float ThrustConsumption { get { return _thrustConsumption; } }
+        public float MineEnergyCost { get { return _mineEnergyCost; } }
+        public float ShootEnergyCost { get { return _shootEnergyCost; } }
+        public float ShockwaveEnergyCost { get { return _shockwaveEnergyCost; } }
+        public float HitPenaltyDuration { get { return _hitDuration; } }
+        public float HitPenaltySpeedFactor { get { return _hitSpeedFactor; } }
+        public float StunPenaltyDuration { get { return _stunDuration; } }
+
+        // Variable views
+        public int Owner { get { return _owner; } }
 		public float Thrust { get { return _thrust; } }
 		public Vector2 Velocity { get { return _rigidbody.velocity; } }
-		public float SpeedMax { get { return _speedMax; } }
 		public Vector2 Position { get { return (Vector2)(transform.position); } }
 		public float Orientation { get { return transform.eulerAngles.z; } }
 		public Vector2 LookAt { get { return new Vector2(Mathf.Cos(Orientation * Mathf.Deg2Rad), Mathf.Sin(Orientation * Mathf.Deg2Rad)); } }
-		public float Radius { get { return _collider.radius * Mathf.Abs(_collider.transform.lossyScale.x); } }
-		public float HitCountdown { get { return _hitCountdown; } }
-		public float Energy { get { return _energy; } }
-		public float MineEnergyCost { get { return _mineEnergyCost; } }
-		public float ShootEnergyCost { get { return _shootEnergyCost; } }
-		public float ShockwaveEnergyCost { get { return _shockwaveEnergyCost; } }
+        public float Energy { get { return _energy; } }
 		public int HitCount { get { return _hitCount; } }
+		public float HitPenaltyCountdown { get { return _hitCountdown; } }
+        public float StunPenaltyCountdown { get { return _stunCountdown; } }
 		public int Score { get { return GameManager.Instance.GetScoreForPlayer(_owner); } }
+        public int HitScore { get { return GameManager.Instance.GetHitScoreForPlayer(_owner); } }
+        public int WaypointScore { get { return GameManager.Instance.GetWayPointScoreForPlayer(_owner); } }
+		public bool HasShot { get { return _hasShot; } }
+        public bool HasFiredShockwave { get { return _hasFiredShockwave; } }
+        public bool HasDroppedMine { get { return _hasDroppedMine; } }
 
+        // Owner
+        private int _owner;
 
-		// Gameplay
-		[SerializeField]
-		private Color color;
-		[SerializeField]
+        // Prefabs
+        [SerializeField]
 		private Mine minePrefab;
 		[SerializeField]
 		private Bullet bulletPrefab;
 		[SerializeField]
-		private Shockwave shockwavePrefab;
+		private Shockwave shockwavePrefab;		
 
-		private int _owner;
-
-		private const float _hitDuration = 3.0f;
+        // Hit
+        private const float _hitDuration = 3.0f;
 		private float _hitSpeedFactor = 0.3f;
 		private float _hitCountdown = 0.0f;
 		private int _hitCount = 0;
 
+		// Stun
 		private const float _stunDuration = 1.5f;
 		private float _stunCountdown = 0.0f;
 
-		private float _energy = 1.0f;
-		private float _mineEnergyCost = 0.20f;
-		private float _shootEnergyCost = 0.12f;
-		private float _shockwaveEnergyCost = 0.35f;
-		private float _energyPerSecond = 0.12f;
-		private float _trustConsumption = 0.5f;
+		// Energy
+        private const float _energyPerSecond = 0.12f;
+        private const float _thrustConsumption = 0.5f;
+        private const float _mineEnergyCost = 0.20f;
+        private const float _shootEnergyCost = 0.12f;
+        private const float _shockwaveEnergyCost = 0.4f;
+        private float _energy = 1.0f;
 
-		// Visual
-		[SerializeField]
+        // Visual
+        [SerializeField]
+        private Color color;
+        [SerializeField]
 		private Material hitMaterial = null;		
 		[SerializeField]
 		private GameObject stunFXPrefab;
 		private GameObject _stunFX = null;
 		private MeshRenderer _meshRenderer = null;
 
-		// Spaceship speed
-		private float _thrust = 0.0f;
-		private const float _speedForThrust = 5.0f;
-		private const float _speedMax = 2.5f;
+        // Speed
+        private const float _speedForThrust = 5.0f;
+        private const float _speedMax = 2.5f;
+        private float _thrust = 0.0f;
 
-		// Spaceship orientation
-		private float _orientationTarget = 0.0f;
+		// Orientation
 		private const float _rotationSpeed = 180.0f;
+		private float _orientationTarget = 0.0f;
 
 		private BaseSpaceShipController _controller = null;
 
-		// Spaceship physics
+		// Physics
 		private Rigidbody2D _rigidbody = null;
 		private CircleCollider2D _collider = null;
 		private ParticleSystem _thrustFX = null;
@@ -112,7 +146,12 @@ namespace DoNotModify
 		public AudioSource stunAudio = null;
 		public AudioSource shockAudio = null;
 
-		private void Awake()
+		// Actions
+		private bool _hasShot = false;
+        private bool _hasFiredShockwave = false;
+        private bool _hasDroppedMine = false;
+
+        private void Awake()
 		{
 
 			_rigidbody = GetComponent<Rigidbody2D>();
@@ -163,6 +202,9 @@ namespace DoNotModify
 				return;
 
 			InputData inputData = _controller.UpdateInput(this.view, GameManager.Instance.GetGameData());
+			_hasShot = false;
+			_hasFiredShockwave = false;
+			_hasDroppedMine = false;
 			_thrust = 0.0f;
 			if (!IsStun())
 			{
@@ -183,7 +225,7 @@ namespace DoNotModify
 					FireShockwave();
 				}
 			}
-			_energy = Mathf.Clamp01(_energy + _energyPerSecond * Time.deltaTime * Mathf.Lerp(1, 1-_trustConsumption, _thrust));
+			_energy = Mathf.Clamp01(_energy + _energyPerSecond * Time.deltaTime * Mathf.Lerp(1, 1-_thrustConsumption, _thrust));
 
 			ParticleSystem.EmissionModule emission = _thrustFX.emission;
 			emission.enabled = _thrust > 0;
@@ -251,7 +293,8 @@ namespace DoNotModify
 			GameObject.Instantiate(minePrefab, transform.position, Quaternion.identity);
 			_energy -= _mineEnergyCost;
 			dropMineAudio?.Play();
-		}
+            _hasDroppedMine = true;
+        }
 
 		public void Shoot()
 		{
@@ -261,7 +304,9 @@ namespace DoNotModify
 			spawned.SetOwner(_owner);
 			_energy -= _shootEnergyCost;
 			shootAudio?.Play();
-		}
+			_hasShot = true;
+
+        }
 
 		public void FireShockwave()
 		{
@@ -271,7 +316,8 @@ namespace DoNotModify
 			spawned.SetOwner(_owner);
 			_energy -= _shockwaveEnergyCost;
 			fireShockwaveAudio?.Play();
-		}
+            _hasFiredShockwave = true;
+        }
 
 		public void OnHitMine(Mine mine)
 		{

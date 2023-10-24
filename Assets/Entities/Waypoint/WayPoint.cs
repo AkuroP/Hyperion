@@ -10,12 +10,15 @@ namespace DoNotModify
 
 		WayPoint _waypoint;
 
-		public int Owner { get { return _waypoint.Owner; } }
-		public float Radius { get { return _waypoint.Radius; } }
-		public Vector2 Position { get { return _waypoint.Position; } }
-	}
+        // Constants
+        public float Radius { get { return _waypoint.Radius; } }
 
-	public class WayPoint : MonoBehaviour
+        //Variables
+        public int Owner { get { return _waypoint.Owner; } }
+        public Vector2 Position { get { return _waypoint.Position; } }
+    }
+
+    public class WayPoint : MonoBehaviour
 	{
 		const string ANIM_ON_CHANGE_OWNER = "OnChangeOwner";
 

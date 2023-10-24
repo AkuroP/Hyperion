@@ -7,14 +7,18 @@ namespace DoNotModify
 	public class BulletView
     {
 		public BulletView(Bullet bullet) { _bullet = bullet; }
-		Bullet _bullet;
 
-		public Vector2 Position { get { return _bullet.Position; } }
+		// Constants
+        public static float Speed { get { return Bullet.Speed; } }
+
+		// Variables
+        public Vector2 Position { get { return _bullet.Position; } }
 		public Vector2 Velocity { get { return _bullet.Velocity; } }
-		public static float Speed { get { return Bullet.Speed; } }
-	}
+    
+		Bullet _bullet;
+    }
 
-	public class Bullet : MonoBehaviour
+    public class Bullet : MonoBehaviour
 	{
 		public BulletView view;
 		public Vector2 Position { get { return (Vector2)(transform.position); } }

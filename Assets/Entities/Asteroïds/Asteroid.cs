@@ -10,8 +10,11 @@ namespace DoNotModify
 
 		Asteroid _asteroid;
 
-		public Vector2 Position { get { return _asteroid.Position; } }
-		public float Radius { get { return _asteroid.Radius; } }
+        // Constants
+        public float Radius { get { return _asteroid.Radius; } }
+
+        // Variables
+        public Vector2 Position { get { return _asteroid.Position; } }
 	}
 
 	public class Asteroid : MonoBehaviour
