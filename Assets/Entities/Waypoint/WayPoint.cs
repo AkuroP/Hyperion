@@ -8,7 +8,7 @@ namespace DoNotModify
     {
 		public WayPointView(WayPoint waypoint) { _waypoint = waypoint; }
 
-		WayPoint _waypoint;
+		public WayPoint _waypoint;
 
         // Constants
         public float Radius { get { return _waypoint.Radius; } }
