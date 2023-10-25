@@ -9,10 +9,14 @@ namespace Hyperion {
 
 	public class Hyperion : BaseSpaceShipController
 	{
+		[Header("Behavior")]
 		public BehaviorTree behaviorTree;
 		private SharedVector2 closestFlag;
 		private SharedVector2 playerPos;
 		private float orientation;
+		
+		[Space(25)]
+		public float distanceDetectionAstero = 3f;
 		public SpaceShipView spaceShip { get; private set; }
 		
 		
@@ -40,11 +44,14 @@ namespace Hyperion {
 
 			closestFlag.Value = GetClosestFlag(spaceship, data);
 			playerPos.Value = spaceship.Position;
-			
+
+			AsteroidDetection(spaceship, data);
 			
 			
 			return new InputData(thrust, orientation, needShoot, false, false);
 		}
+
+		#region Navigation
 
 		public void SetOrientation(float value)
 		{
@@ -69,6 +76,15 @@ namespace Hyperion {
 			}
 			return tMin;
 		}
+
+		public void AsteroidDetection(SpaceShipView spaceship, GameData data)
+		{
+			RaycastHit2D hit = Physics2D.Raycast(spaceship.Position, spaceship.LookAt,distanceDetectionAstero);
+			
+			if(hit != null) print(hit.collider.gameObject.name);
+		}
+		
+		#endregion
 	}
 
 }
