@@ -13,10 +13,13 @@ namespace Hyperion {
 		public BehaviorTree behaviorTree;
 		private SharedVector2 closestFlag;
 		private SharedVector2 playerPos;
+		private SharedVector2 normalHit;
+		private SharedBool isAsteroidAhead;
 		private float orientation;
 		
 		[Space(25)]
 		public float distanceDetectionAstero = 3f;
+		public LayerMask asteroLayer;
 		public SpaceShipView spaceShip { get; private set; }
 		
 		
@@ -31,21 +34,23 @@ namespace Hyperion {
 		public override void Initialize(SpaceShipView spaceship, GameData data)
 		{
 			this.spaceShip = spaceship;
+			closestFlag = (SharedVector2)behaviorTree.GetVariable("TargetPos");
+			playerPos = (SharedVector2)behaviorTree.GetVariable("PlayerPos");
+			isAsteroidAhead = (SharedBool)behaviorTree.GetVariable("isAsteroidAhead");
+			normalHit = (SharedVector2)behaviorTree.GetVariable("NormalHit");
 		}
 
 		public override InputData UpdateInput(SpaceShipView spaceship, GameData data)
 		{
-			closestFlag = (SharedVector2)behaviorTree.GetVariable("TargetPos");
-			playerPos = (SharedVector2)behaviorTree.GetVariable("PlayerPos");
+			closestFlag.Value = GetClosestFlag(spaceship, data);
+			playerPos.Value = spaceship.Position;
+			isAsteroidAhead.Value = AsteroidDetection(spaceship, data);
 			SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
 			float thrust = 1f;
 			// float targetOrient = spaceship.Orientation + 90.0f;
 			bool needShoot = AimingHelpers.CanHit(spaceship, otherSpaceship.Position, otherSpaceship.Velocity, 0.15f);
 
-			closestFlag.Value = GetClosestFlag(spaceship, data);
-			playerPos.Value = spaceship.Position;
-
-			AsteroidDetection(spaceship, data);
+			
 			
 			
 			return new InputData(thrust, orientation, needShoot, false, false);
@@ -77,13 +82,26 @@ namespace Hyperion {
 			return tMin;
 		}
 
-		public void AsteroidDetection(SpaceShipView spaceship, GameData data)
+		public bool AsteroidDetection(SpaceShipView spaceship, GameData data)
 		{
-			RaycastHit2D hit = Physics2D.Raycast(spaceship.Position, spaceship.LookAt,distanceDetectionAstero);
-			
-			if(hit != null) print(hit.collider.gameObject.name);
+			RaycastHit2D hit = Physics2D.Raycast(spaceship.Position, spaceship.LookAt,distanceDetectionAstero, asteroLayer);
+
+			if (hit.collider == null){}
+			else if (hit.collider != null)
+			{
+				normalHit.Value = hit.normal;
+				print(hit.normal);
+				return true;
+			}
+
+			return false;
 		}
-		
+
+		private void OnDrawGizmos()
+		{
+			Gizmos.DrawRay(spaceShip.Position, spaceShip.LookAt * distanceDetectionAstero);
+		}
+
 		#endregion
 	}
 
