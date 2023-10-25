@@ -61,7 +61,7 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(430.1651,-223.8366)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(10.4301243,209.107773)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"","Int32mValue":10},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"","BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"","BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-2.427002,133.679153)"},"ID":2,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-2.427002,155.679138)"},"ID":3,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"MoveTo","NodeData":{"Offset":"(1.21167946,163.605072)"},"ID":4,"Name":"Move
+      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(430.1651,-223.8366)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(10.4301243,209.107773)","WatchedFields":["count"]},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":10},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"","BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":"","BooleanmValue":false},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-2.427002,133.679153)"},"ID":2,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-2.427002,155.679138)"},"ID":3,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"MoveTo","NodeData":{"Offset":"(-88.31531,163.605072)"},"ID":4,"Name":"Move
         To","Instant":true,"SharedVector2target":{"Type":"BehaviorDesigner.Runtime.SharedVector2","Name":"TargetPos","IsShared":true,"Vector2mValue":"(0,0)"}}]}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedVector2","Name":"PlayerPos","IsShared":true,"Vector2mValue":"(0,0)"},{"Type":"BehaviorDesigner.Runtime.SharedVector2","Name":"TargetPos","IsShared":true,"Vector2mValue":"(0,0)"}]}'
       fieldSerializationData:
         typeName: []
@@ -87,3 +87,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   behaviorTree: {fileID: 8946865861203958324}
+  _middleScreen: {x: 0, y: 0}
+  _topLeftRegion: []
+  _topRightRegion: []
+  _bottomLeftRegion: []
+  _bottomRightRegion: []
+  _hasPassedPoint: []
+  _regionsBestValue: 00000000000000000000000000000000
+  _bestWP: []
