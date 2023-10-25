@@ -35,7 +35,7 @@ namespace Hyperion {
 			playerPos = (SharedVector2)behaviorTree.GetVariable("PlayerPos");
 			SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
 			float thrust = 1.0f;
-			float targetOrient = spaceship.Orientation + 90.0f;
+			// float targetOrient = spaceship.Orientation + 90.0f;
 			bool needShoot = AimingHelpers.CanHit(spaceship, otherSpaceship.Position, otherSpaceship.Velocity, 0.15f);
 
 			closestFlag.Value = GetClosestFlag(spaceship, data);
@@ -61,7 +61,7 @@ namespace Hyperion {
 			{
 				Vector2 t = data.WayPoints[i].Position;
 				float dist = Vector2.Distance(t, currentPos);
-				if (dist < minDist)
+				if (dist < minDist && data.WayPoints[i].Owner != spaceship.Owner)
 				{
 					print(data.WayPoints[i]._waypoint.gameObject.name);
 					tMin = t;

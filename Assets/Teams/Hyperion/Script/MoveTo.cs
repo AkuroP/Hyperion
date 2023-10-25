@@ -4,7 +4,7 @@ using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
 
-public class MoveToFlag : Action
+public class MoveTo : Action
 {
     public SharedVector2 target;
     
@@ -16,11 +16,9 @@ public class MoveToFlag : Action
         {
             return TaskStatus.Success;
         }
-        else
-        {
-            return TaskStatus.Running;
-        }
-        
+
+        return TaskStatus.Running;
+
     }
     
     public bool AlmostEqual(Vector3 v1, Vector3 v2, float tolerance)
