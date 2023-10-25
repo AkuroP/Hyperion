@@ -12,6 +12,7 @@ public class MoveTo : Action
     {
         float orientation = AimingHelpers.ComputeSteeringOrient(Hyperion.Hyperion.intance.spaceShip, target.Value);
         Hyperion.Hyperion.intance.SetOrientation(orientation);
+        
         if (AlmostEqual(target.Value, Hyperion.Hyperion.intance.spaceShip.Position, float.Epsilon))
         {
             return TaskStatus.Success;
