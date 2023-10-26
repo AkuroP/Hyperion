@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using UnityEngine.UI;
 using System.CodeDom;
 using Microsoft.Win32.SafeHandles;
+using UnityEngine.Serialization;
 
 namespace Hyperion {
 
@@ -26,7 +27,7 @@ namespace Hyperion {
 		public LayerMask asteroLayer;
 
 		//Detection
-		public float _shootingRange = 3f;
+		public float _mineRange = 3f;
 		public float _shockwaveRange = 1f;
 		public float _shootingAngle = 40f;
 		public LayerMask _mineLayer;
@@ -88,6 +89,10 @@ namespace Hyperion {
 			bool needToShoot = ((SharedBool)behaviorTree.GetVariable("OutShoot")).Value;
 			bool needToMine = ((SharedBool)behaviorTree.GetVariable("OutMine")).Value;
 			bool needToShock = ((SharedBool)behaviorTree.GetVariable("OutShockWave")).Value;
+			
+			bool isEnemy = ((SharedBool)behaviorTree.GetVariable("isEnemy")).Value;
+			bool isAMine = ((SharedBool)behaviorTree.GetVariable("isAMine")).Value;
+			
 
 			//Shoot
 			if (needToShoot) behaviorTree.SetVariableValue("OutShoot", false);
@@ -95,7 +100,12 @@ namespace Hyperion {
 			if (needToMine) behaviorTree.SetVariableValue("OutMine", false);
 			//ShockWave
 			if (needToMine) behaviorTree.SetVariableValue("OutShockWave", false);
+			//isEnemy
+			if (isEnemy) behaviorTree.SetVariableValue("isEnemy", false);
+			//isEnemy
+			if (isAMine) behaviorTree.SetVariableValue("isAMine", false);
 			
+			behaviorTree.SetVariableValue("EnemyPosition", _mineRange);
 			
 			closestFlag.Value = GetClosestFlag(spaceship, data);
 			isAsteroidAhead.Value = AsteroidDetection(spaceship, data);
@@ -105,6 +115,7 @@ namespace Hyperion {
 			ShootingDetection(spaceship, data);
             
 			playerPos.Value = spaceship.Position;
+			behaviorTree.SetVariableValue("Energy", spaceship.Energy);
 			
 			return new InputData(thrust, orientation, needToShoot, needToMine, needToShock);
 		}
@@ -165,7 +176,7 @@ namespace Hyperion {
 
 		public void ShootingDetection(SpaceShipView spaceship, GameData data)
 		{
-			RaycastHit2D hit = Physics2D.CircleCast(spaceShip.Position, _shootingRange, spaceship.LookAt);
+			RaycastHit2D hit = Physics2D.CircleCast(spaceShip.Position, _mineRange, spaceship.LookAt);
 			if (hit.collider != null)
 			{
                 float angle = Vector2.Angle(spaceship.LookAt, hit.point);
@@ -173,19 +184,23 @@ namespace Hyperion {
 				Debug.DrawRay(spaceship.Position, (Vector2)hit.transform.forward * 1000, Color.green);
                 if (angle < _shootingAngle)
                 {
+	                behaviorTree.SetVariableValue("EnemyAhead", true);
 					if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player") && Vector2.Distance(hit.transform.position, spaceShip.Position) > float.Epsilon)
 					{
 						float orientation = AimingHelpers.ComputeSteeringOrient(spaceShip, hit.point);
 						SetOrientation(orientation);
 						behaviorTree.SetVariableValue("OutShoot", true);
-						Debug.Log("SHOOT ZBI");
+						behaviorTree.SetVariableValue("isEnemy", true);
+						
+						
+						
                     }
                     if (hit.transform.tag == "Mine")
 					{
                         float orientation = AimingHelpers.ComputeSteeringOrient(spaceShip, hit.point);
                         SetOrientation(orientation);
                         behaviorTree.SetVariableValue("OutShoot", true);
-						Debug.Log("SHOOT MINE");
+                        behaviorTree.SetVariableValue("isAMine", true);
                     }
                 }
 				else
@@ -193,6 +208,7 @@ namespace Hyperion {
 					if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player") && (Vector2)hit.transform.position != spaceShip.Position)
 					{
 						float dist = Vector2.Distance(spaceShip.Position, hit.point);
+						behaviorTree.SetVariableValue("EnemyAhead", false);
 						if (dist < _shockwaveRange)
 						{
 							behaviorTree.SetVariableValue("OutShockWave", true);
@@ -211,16 +227,16 @@ namespace Hyperion {
 			
 		}
 
-		private void OnDrawGizmos()
-		{
-			Gizmos.DrawRay(spaceShip.Position, spaceShip.LookAt * distanceDetectionAstero);
-			Gizmos.color = Color.red;
-			Gizmos.DrawWireSphere(spaceShip.Position, _shootingRange);
-
-			Gizmos.color = Color.black;
-			Gizmos.DrawWireSphere(spaceShip.Position, _shockwaveRange);
-			
-		}
+		// private void OnDrawGizmos()
+		// {
+		// 	Gizmos.DrawRay(spaceShip.Position, spaceShip.LookAt * distanceDetectionAstero);
+		// 	Gizmos.color = Color.red;
+		// 	Gizmos.DrawWireSphere(spaceShip.Position, _shootingRange);
+		//
+		// 	Gizmos.color = Color.black;
+		// 	Gizmos.DrawWireSphere(spaceShip.Position, _shockwaveRange);
+		// 	
+		// }
 
 		#endregion
 		private void DispatchEachPoints(GameData data)
@@ -316,6 +332,7 @@ namespace Hyperion {
             DispatchEachPoints(data);
 
         }
+		
     }
 	}
 

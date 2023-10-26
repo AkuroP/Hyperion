@@ -23,7 +23,7 @@ namespace Hyperion
                 return TaskStatus.Success;
             }
 
-            flagTaken.Value = false;
+            //flagTaken.Value = false;
             return TaskStatus.Running;
 
         }
