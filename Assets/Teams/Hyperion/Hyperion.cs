@@ -64,8 +64,6 @@ namespace Hyperion {
 
 		public override InputData UpdateInput(SpaceShipView spaceship, GameData data)
 		{
-			closestFlag = (SharedVector2)behaviorTree.GetVariable("TargetPos");
-			playerPos = (SharedVector2)behaviorTree.GetVariable("PlayerPos");
             SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
 	
             DispatchEachPoints(data);
@@ -130,7 +128,7 @@ namespace Hyperion {
 			else if (hit.collider != null)
 			{
 				normalHit.Value = hit.normal;
-				print(hit.normal);
+				
 				return true;
 			}
 
