@@ -144,12 +144,7 @@ namespace Hyperion {
 
 			return false;
 		}
-
-		private void OnDrawGizmos()
-		{
-			Gizmos.DrawRay(spaceShip.Position, spaceShip.LookAt * distanceDetectionAstero);
-		}
-
+		
 		#endregion
 		private void DispatchEachPoints(GameData data)
         {
