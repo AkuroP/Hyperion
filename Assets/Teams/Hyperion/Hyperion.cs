@@ -70,8 +70,18 @@ namespace Hyperion {
             
 			float thrust = 1f;
 			// float targetOrient = spaceship.Orientation + 90.0f;
-			bool needShoot = AimingHelpers.CanHit(spaceship, otherSpaceship.Position, otherSpaceship.Velocity, 0.15f);
+			bool needToShoot = ((SharedBool)behaviorTree.GetVariable("OutShoot")).Value;
+			bool needToMine = ((SharedBool)behaviorTree.GetVariable("OutMine")).Value;
+			bool needToShock = ((SharedBool)behaviorTree.GetVariable("OutShockWave")).Value;
 
+			//Shoot
+			if (needToShoot) behaviorTree.SetVariableValue("OutShoot", false);
+			//Mine
+			if (needToMine) behaviorTree.SetVariableValue("OutMine", false);
+			//ShockWave
+			if (needToMine) behaviorTree.SetVariableValue("OutShockWave", false);
+			
+			
 			closestFlag.Value = GetClosestFlag(spaceship, data);
 			isAsteroidAhead.Value = AsteroidDetection(spaceship, data);
 
@@ -79,7 +89,7 @@ namespace Hyperion {
 
             playerPos.Value = spaceship.Position;
 			
-			return new InputData(thrust, orientation, needShoot, false, false);
+			return new InputData(thrust, orientation, needToShoot, needToMine, needToShock);
 		}
 
 		#region Navigation

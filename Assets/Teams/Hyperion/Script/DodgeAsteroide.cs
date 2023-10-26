@@ -8,31 +8,35 @@ public class DodgeAsteroide : Action
 {
     public SharedVector2 normalHit;
     public SharedFloat turnAngle;
+    public SharedBool avoid;
 
     public override TaskStatus OnUpdate()
     {
         
         Vector2 playerForward = Hyperion.Hyperion.intance.spaceShip.LookAt;
-        float dot = Vector2.Dot(playerForward, new Vector2(-normalHit.Value.y,normalHit.Value.x));
+        float dotProd = Vector2.Dot(playerForward, new Vector2(-normalHit.Value.y,normalHit.Value.x));
+
+        // float orient = (90 * (1 - Mathf.Abs(dotProd))) * -Mathf.Sign(dotProd);
+        // Hyperion.Hyperion.intance.SetOrientation(orient);
         
+        Avoid(dotProd, turnAngle.Value);
+       
+        return TaskStatus.Success;
+    }
+
+    private void Avoid(float dot, float angle)
+    {
         if (dot > 0)
         {
-            Debug.Log("Va à droite");
-            Hyperion.Hyperion.intance.SetOrientation(turnAngle.Value);
-            return TaskStatus.Success;
+            Hyperion.Hyperion.intance.SetOrientation(angle);
         }
         else if (dot == 0)
         {
-            Debug.Log("tkt");
-            return TaskStatus.Success;
+            Hyperion.Hyperion.intance.SetOrientation(angle);
         }
         else if (dot < 0)
         {
-            Debug.Log("Va à gauche");
-            Hyperion.Hyperion.intance.SetOrientation(-turnAngle.Value);
-            return TaskStatus.Success;
+            Hyperion.Hyperion.intance.SetOrientation(-angle);
         }
-        
-        return TaskStatus.Running;
     }
 }

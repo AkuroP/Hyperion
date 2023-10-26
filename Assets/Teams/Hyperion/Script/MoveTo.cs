@@ -7,13 +7,14 @@ using UnityEngine;
 public class MoveTo : Action
 {
     public SharedVector2 target;
+    public float endDistance = 0.5f;
     
     public override TaskStatus OnUpdate()
     {
         float orientation = AimingHelpers.ComputeSteeringOrient(Hyperion.Hyperion.intance.spaceShip, target.Value);
         Hyperion.Hyperion.intance.SetOrientation(orientation);
         
-        if (AlmostEqual(target.Value, Hyperion.Hyperion.intance.spaceShip.Position, float.Epsilon))
+        if (Vector2.Distance(target.Value, Hyperion.Hyperion.intance.spaceShip.Position) < endDistance)
         {
             return TaskStatus.Success;
         }
