@@ -60,29 +60,22 @@ namespace Hyperion {
 			isAsteroidAhead = (SharedBool)behaviorTree.GetVariable("isAsteroidAhead");
 			normalHit = (SharedVector2)behaviorTree.GetVariable("NormalHit");
 		}
-
-		public override InputData UpdateInput(SpaceShipView spaceship, GameData data)
-		{
-			closestFlag.Value = GetClosestFlag(spaceship, data);
-			playerPos.Value = spaceship.Position;
-			isAsteroidAhead.Value = AsteroidDetection(spaceship, data);
-			SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
-
-
-            DispatchEachPoints(data);
-        }
+		
 
 		public override InputData UpdateInput(SpaceShipView spaceship, GameData data)
 		{
 			closestFlag = (SharedVector2)behaviorTree.GetVariable("TargetPos");
 			playerPos = (SharedVector2)behaviorTree.GetVariable("PlayerPos");
             SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
-
+	
+            DispatchEachPoints(data);
+            
 			float thrust = 1f;
 			// float targetOrient = spaceship.Orientation + 90.0f;
 			bool needShoot = AimingHelpers.CanHit(spaceship, otherSpaceship.Position, otherSpaceship.Velocity, 0.15f);
 
 			closestFlag.Value = GetClosestFlag(spaceship, data);
+			isAsteroidAhead.Value = AsteroidDetection(spaceship, data);
 
             if (!_hasPassedPoint.Contains(closestFlag.Value)) _hasPassedPoint.Add(closestFlag.Value);
 
@@ -150,9 +143,7 @@ namespace Hyperion {
 		}
 
 		#endregion
-	}
-
-        private void DispatchEachPoints(GameData data)
+		private void DispatchEachPoints(GameData data)
         {
             _middleScreen = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width / 2, Screen.height / 2));
 
@@ -246,7 +237,5 @@ namespace Hyperion {
 
         }
     }
+	}
 
-
-
-}
